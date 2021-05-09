@@ -1,59 +1,19 @@
-import React, {useState, useEffect} from 'react';
-import axios from 'axios';
-import {MOVIE_URL} from './Config.js';
-import Movie from "./Movie.js";
-import "./App.css";
+import React from 'react';
+import {HashRouter, Route} from "react-router-dom";
+import About from "./routes/About";
+import Home from "./routes/Home";
+import Navigation from "./components/Navigation.js"
+import Detail from "./components/Detail.js"
 
 function App() {
-  
-	const [Loading, setLoading] = useState(true)
-	const [Movies, setMovies] = useState([])
-	
-	useEffect(()=> {
-		
-		getMovies(MOVIE_URL);
-		
-	}, [])
-	
-	const getMovies = (url) => {
-		axios.get(url)
-			.then(response => {
-				setMovies(response.data.results)
-				console.log(response.data.results)
-				setLoading(false);
-			})
-			.catch((err) => {
-				console.log(err);
-			})
-		
-	}
-	
-    return (
-		<section className="container">
-			{Loading ? (
-				<div className="loader">
-					<span className = "loader_text">Loading...</span>
-				</div>
-			):(
-				<div className="movies">
-					{Movies && Movies.map((movie, index) => (
-						<React.Fragment key = {index}>
-							<Movie
-								id={movie.id}
-								title={movie.title}
-								overview={movie.overview}
-								popularity={movie.popularity}
-								vote_average={movie.vote_average}
-								release_date={movie.release_date}
-								poster_path={movie.poster_path}
-								genre={movie.genre_ids}
-							/>
-						</React.Fragment>
-					))}
-				</div>
-			)}
-		</section>
-    );
+	return (
+		<HashRouter>
+			<Navigation />
+			<Route path="/" exact={true} component={Home}/>
+			<Route path="/about" component={About}/>
+			<Route path="/movie/:id" component={Detail}/>
+		</HashRouter>
+	)
 }
 
 export default App;
